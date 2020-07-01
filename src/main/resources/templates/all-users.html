@@ -14,7 +14,7 @@
 <body>
 
 <nav class="navbar navbar-dark bg-dark">
-    <span class="navbar-brand mb-0 h1"><b th:utext="${adminList.getEmail()}"></b>
+    <span class="navbar-brand mb-0 h1"><b th:utext="${ adminList.getEmail()}"></b>
             <span class="text-white">User with roles:
         <span th:each="role : ${adminList.getRole()}">
                     <span th:if="${role.toString() == 'ROLE_USER'}">USER</span>
@@ -55,7 +55,7 @@
                         <div class="bg-white">
                             <tr><p></p></tr>
                             <tr><p align="left" class="font-weight-bold">All users</p></tr>
-                            <tr>
+                            <tr id="usersTableId">
                                 <th>ID</th>
                                 <th>First Name</th>
                                 <th>Last Name</th>
@@ -182,19 +182,19 @@
                                                 <form action="#" th:action="@{'/delete'}" th:object="${user}"
                                                       method="POST">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title">Edit user</h5>
+                                                        <h5 class="modal-title">Delete user</h5>
                                                         <button type="button" class="close" data-dismiss="modal"
                                                                 aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
                                                     <div class="row my-0">
-                                                        <div class="container modal-body col-lg-6">
-                                                            <label class="my-0" for="id2"><b>ID</b></label>
+                                                        <div class="container modal-body col-lg-6" id="deleteContainer">
+                                                            <label class="my-0" for="idDelete"><b>ID</b></label>
                                                             <div class="form-group">
                                                                 <input type="text" class="form-control form-control-sm"
-                                                                       id="id2" th:value="${user.getId()}" name="id"
-                                                                       placeholder="id2" readonly>
+                                                                       id="idDelete" th:value="${user.getId()}" name="id"
+                                                                       placeholder="idDelete" readonly>
                                                             </div>
                                                             <label class="my-0" for="firstNameDelete"><b>First
                                                                 name</b></label>
@@ -244,7 +244,7 @@
                                                         <button type="button" name="cancel" class="btn btn-secondary"
                                                                 data-dismiss="modal">Close
                                                         </button>
-                                                        <button type="Submit" name="submit" class="btn btn-danger">
+                                                        <button type="Submit" name="submit" id="btnDeliteId" class="btn btn-danger">
                                                             Delete
                                                         </button>
                                                     </div>
@@ -317,8 +317,8 @@
                             <tr><p></p></tr>
                             <tr><p align="left" class="font-weight-bold">Add new user</p></tr>
                             <div class="container bg-white border">
-                                <form action="createUser" method="post">
-                                    <div class="row">
+                                <form>
+                                    <div class="row" id="createUserForm">
                                         <div class="col-4"></div>
                                         <div class="col-4">
                                             <div align="center" class="form-group">
@@ -354,21 +354,19 @@
 
                                                 <select multiple class="form-control form-control-sm" size="2"
                                                         name="role">
-                                                    <option selected th:each="role : ${rolesuser}"
+                                                    <option th:each="role : ${rolesuser}"
                                                             th:value="${role}"
                                                             th:text="${role}"></option>
                                                 </select>
                                             </div>
                                             <div align="center" class="form-group">
-                                                <button formmethod="post" onclick="location.href='createUser'"
+                                                <button name="create"
                                                         class="btn btn-success">
                                                     Add new user
                                                 </button>
                                             </div>
                                         </div>
                                     </div>
-                                    </td>
-                                    </tr>
                                 </form>
                             </div>
                         </div>
@@ -381,8 +379,9 @@
     </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    <script
+            src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
             integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
@@ -390,5 +389,89 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
+<!--    <script src="main.js"></script>-->
+    <script>
+        document.body.addEventListener("click", function (evt) {
+            // evt.stopPropagation();
+            //create new user vvv
+            if(evt.target.getAttribute("name") === "create") {
+                evt.preventDefault();
+                evt.stopPropagation();
+                createUser();
+            }
+            // delete user vvv
+            if(evt.target.getAttribute("id") === "btnDeliteId") {
+                evt.preventDefault();
+                evt.stopPropagation();
+                deleteUser();
+            }
+        })
+
+        function createUser() {
+            let form = document.getElementById("createUserForm");
+            let inputs = form.querySelectorAll("input");
+            let sendData = {};
+            for(let i=0; i<inputs.length; i++) {
+                sendData[inputs[i].id] = inputs[i].value;
+            }
+
+            let select = form.querySelector("select");
+            let options = select.querySelectorAll("option");
+            let sendDataRole = [];
+            for (let i = 0; i < options.length; i++) {
+                if(options[i].selected){
+                    sendDataRole.push(options[i].value)
+                }
+            }
+            //------
+            sendData["role"] = sendDataRole;
+            fetch("/rest/",{
+            // let response = fetch("/rest/",{
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json;charset= utf-8'
+                },
+                body:JSON.stringify(sendData)
+            }).then(response=>response.json()).then(res => addUserLine(res)).then(addUserClose).then();
+            // }).then(response=>response.json()).then(res => console.log(res,"<<<<<")).then(addUserClose).then();
+
+
+            // let responseUser = response.json();
+            // let userJJ = JSON.parse(response);
+            // console.log("--->",userJJ,"<--user");
+            // addUserClose();
+
+        }
+        function addUserLine(res) {
+            console.log("method-->",res);
+
+        }
+            function addUserClose() {
+                let tab = document.getElementById("v-pills-create-tab");
+                console.log(tab.getAttribute("aria-selected"));
+                let usersTab = document.getElementById("v-pills-home2-tab");
+                tab.setAttribute("aria-selected", false);
+                usersTab.setAttribute("aria-selected", true);
+                document.getElementById("v-pills-home").classList.add("show", "active");
+                document.getElementById("v-pills-create").classList.remove("show", "active");
+                tab.classList.remove("active");
+                usersTab.classList.add("active");
+            }
+
+        function deleteUser() {
+
+
+            let delForm = document.getElementById("deleteContainer");
+            let inputs = delForm.querySelectorAll("input");
+            let delData = {};
+            for(let i=0; i<inputs.length; i++) {
+                delData[inputs[i].id] = inputs[i].value;
+            }
+            console.log(">>>Id container<<<",delData,">>>",inputs,"<<<");
+            let dellform = document.getElementById("idDelete");
+            let deliddta = dellform.value;
+            console.log("input-->",deliddta,"<<>>",dellform)
+        }
+    </script>
 </body>
 </html>

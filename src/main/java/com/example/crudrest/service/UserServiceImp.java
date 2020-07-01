@@ -42,6 +42,25 @@ public class UserServiceImp implements UserService {
         return true;
     }
 
+//    @Transactional
+//    @Override
+//    public boolean add2(User user) {
+//        user.setRole(user.getRole());
+//        Set<Role> roleSet = new HashSet<>();
+//        roleSet = user.getRole();
+//        User user1 = new User();
+//        user1.setFirstName(user.getFirstName());
+//        user1.setLastName(user.getLastName());
+//        user1.setAge(user.getAge());
+//        user1.setEmail(user.getEmail());
+//
+//        user1.setRole(roleSet);
+//        user1.setPassword(passwordEncoder.encode(user.getPassword()));
+//        userDao.add(user1);
+//        userDao.add(user);
+//        return true;
+//    }
+
     @Transactional
     @Override
     public void editUser(User user, String[] roles) {

@@ -115,7 +115,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getRole();
+        return role;
     }
 
     @Override
@@ -124,7 +124,7 @@ public class User implements UserDetails {
     }
 
     public void setUsername(String email) {
-        setEmail(email);
+        this.email = email;
     }
 
     @Override
