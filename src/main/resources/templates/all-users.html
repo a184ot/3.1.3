@@ -481,26 +481,36 @@
                     'Content-Type': 'application/json;charset= utf-8'
                 },
                 body:JSON.stringify(sendData)
-            }).then(response=>response.json()).then(res => addUserLine(res)).then(addUserClose).then(clearAddingForm);
+            }).then(response=>response.json()).then(res => addUserLine(res)).
+            then(addUserClose).then(clearAddingForm);
             // }).then(response=>response.json()).then(res => console.log(res,"<<<<<")).then(addUserClose).then();
 
-            function clearAddingForm() {
-                let formforclear = form.childNodes.item(3).childNodes;
-                formforclear.item(1).childNodes.item(3).value="";
-                formforclear.item(3).childNodes.item(3).value="";
-                formforclear.item(5).childNodes.item(3).value="";
-                formforclear.item(7).childNodes.item(3).value="";
-                formforclear.item(9).childNodes.item(3).value="";
-                formforclear.item(11).childNodes.item(3).childNodes.item(3).selected=false;
-                formforclear.item(11).childNodes.item(3).childNodes.item(1).selected=false;
-                console.log("clearAddingForm")
-            }
+
             // let responseUser = response.json();
             // let userJJ = JSON.parse(response);
             // console.log("--->",userJJ,"<--user");
             // addUserClose();
             console.log("createUser");
         }
+
+        function clearAddingForm() {
+            // let form = document.getElementById("createUserForm");
+            let formForClear = document.getElementById("createUserForm").childNodes.item(3).childNodes;
+            formForClear.item(1).childNodes.item(3).value="";
+            formForClear.item(3).childNodes.item(3).value="";
+            formForClear.item(5).childNodes.item(3).value="";
+            formForClear.item(7).childNodes.item(3).value="";
+            formForClear.item(9).childNodes.item(3).value="";
+            // let i = 1;
+            // for (i=1; i<10; i+2) {
+            //     console.log("3>>>",i);
+            //     formForClear.item(i).childNodes.item(3).value="";
+            // }
+            formForClear.item(11).childNodes.item(3).childNodes.item(1).selected=false
+            formForClear.item(11).childNodes.item(3).childNodes.item(3).selected=false;
+            console.log("clearAddingForm")
+        }
+
         function addUserLine(res) {
             let hiddenUser = document.getElementById("hiddenLine");
             let cloneLine = hiddenUser.cloneNode(true);
