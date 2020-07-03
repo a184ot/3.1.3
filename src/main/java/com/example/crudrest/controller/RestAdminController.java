@@ -1,20 +1,16 @@
 package com.example.crudrest.controller;
 
-import com.example.crudrest.model.Role;
 import com.example.crudrest.model.User;
 import com.example.crudrest.service.RoleService;
 import com.example.crudrest.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/rest/**")
@@ -50,8 +46,15 @@ public class RestAdminController {
     }
 
     @DeleteMapping({"/{id}"})
-    private boolean deleteUser(@PathVariable("id") Long id, Model model) {
-        return userService.deleteUser(id);
+    private ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        System.out.println("oppa");
+        boolean status = userService.deleteUser(id);
+        if (status) {
+            return new  ResponseEntity<>(null,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.SERVICE_UNAVAILABLE);
+        }
+//        return ResponseEntity.status(200);
 //        return "redirect:/admin";
     }
 
