@@ -643,38 +643,21 @@
             changeUserLine(changedUser.id);
             let formChange = document.getElementById(`user${changedUser.id}`);
             let doc2 = formChange.childNodes;
-            console.log("ch1");
             doc2.item(1).textContent = changedUser.id;
             doc2.item(3).textContent = changedUser.firstName;
             doc2.item(5).textContent = changedUser.lastName;
             doc2.item(7).textContent = changedUser.age;
             doc2.item(9).textContent = changedUser.email;
             let roleUser = changedUser.role;
-
-            let hiddenUser = document.getElementById("hiddenLine").childNodes.item(11);
-            console.log("do",doc2.item(11).childNodes.item(1))
-            // doc2.item(11).childNodes.item(1).remove();
-            console.log("posle",doc2.item(11).childNodes.item(1))
-            // doc2.item(11).insertAdjacentHTML("beforeend", `</span>`);
-            // doc2.item(11).insertAdjacentHTML("beforeend", `<span id="roleUser" value="ROLE_USER"></span>`);
-            // doc2.item(11).insertAdjacentHTML("beforeend", `<span>`);
-            // doc2.item(11).insertAdjacentHTML("beforeend", `</span>`);
-            // doc2.item(11).insertAdjacentHTML("beforeend", `<span id="roleAdmin" value="ROLE_ADMIN"></span>`);
-            // doc2.item(11).insertAdjacentHTML("beforeend", `<span>`);
-            console.log("posle2",doc2.item(11).childNodes.item(1))
             let role1 = doc2.item(11).childNodes.item(2);
             let role2 = doc2.item(11).childNodes.item(3);
-            console.log("ch1,5",role1,"r1<<>>r2",role2,"node with role",doc2.item(11).childNodes.item(2),">>><<<",hiddenUser);
-
             role1.textContent = "";
             role2.textContent = "";
-            console.log("ch2");
             if (roleUser[1].name.includes("ADMIN")) {
                 role2.textContent = "ADMIN";
             } else {
                 role2.textContent = "USER";
             }
-            console.log("ch3");
             if (roleUser[0] != null) {
                 if (roleUser[0].name.includes("ADMIN")) {
                     role1.textContent = "ADMIN";
@@ -682,8 +665,6 @@
                     role1.textContent = "USER";
                 }
             }
-            // // doc2.item(13).childNodes.item(1).id=`${changedUser.id}`;
-            // // doc2.item(15).childNodes.item(1).id=`${changedUser.id}`
             let formBtn = document.getElementById(`user${changedUser.id}`).childNodes;
             formBtn.item(13).childNodes.item(1).id=`${changedUser.id}`;
             formBtn.item(15).childNodes.item(1).id=`${changedUser.id}`
@@ -703,8 +684,7 @@
         }
         
         function getUserFromTable(userId) {
-            let formGet2 = document.getElementById(`user${userId}`);
-            let doc2 = formGet2.childNodes;
+            let doc2 = document.getElementById(`user${userId}`).childNodes;
             let docRole ="";
             let user = {
                 id: doc2.item(1).textContent,
@@ -717,7 +697,7 @@
                 docRole = "ADMIN ";
             }
             if ((doc2.item(11).textContent).includes("USER")) {
-                docRole =docRole.concat("USER");
+                docRole = docRole.concat("USER");
             }
             console.log("getUserFromTable");
             return user;
