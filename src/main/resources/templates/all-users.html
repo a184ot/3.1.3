@@ -99,10 +99,8 @@
                                 <td value="age"></td>
                                 <td value="email"></td>
                                 <td class="text-nowrap">
-<!--                                    <span th:each="role : ${user.role}">-->
                                         <span id="roleUser" value="ROLE_USER"></span>
                                         <span id="roleAdmin" value="ROLE_ADMIN"></span>
-<!--                                    </span>-->
                                 </td>
                                 <td>
                                     <button type="button" class="btn btn-info" data-toggle="modal"
@@ -141,7 +139,7 @@
                                <label class="my-0" for="id"><b>ID</b></label>
                                <div class="form-group">
                                    <input type="text" class="form-control form-control-sm"
-                                          id="id" name="id" placeholder="id" value="id" readonly>  <!--th:value="${user.getId()}"-->
+                                          id="idEdit" name="id" placeholder="id" value="id" readonly>  <!--th:value="${user.getId()}"-->
                                </div>
                                <label class="my-0" for="firstNameEdit"><b>First
                                    name</b></label>
@@ -184,7 +182,7 @@
                                </div>
                                <label class="my-0"><b>Role</b></label>
                                <div class="form-group">
-                                   <select multiple class="form-control form-control-sm"
+                                   <select multiple class="form-control form-control-sm" id="roleEdit"
                                            size="2" name="role" value="role"><!--th:value="*{role}"-->
                                        <th:block>
                                            <option value="ROLE_USER">USER</option>
@@ -203,7 +201,8 @@
                            <button type="button" name="cancel" class="btn btn-secondary"
                                    data-dismiss="modal">Close
                            </button>
-                           <button type="Submit" name="submit" class="btn btn-primary">
+                           <button type="Submit" name="submit" class="btn btn-primary"
+                           id="btnEditId" data-dismiss="modal">
                                Edit
                            </button>
                        </div>
@@ -433,18 +432,11 @@
 <!--    <script src="main.js"></script>-->
     <script>
         document.body.addEventListener("click", function (evt) {
-            // evt.stopPropagation();
             //create new user vvv
             if(evt.target.getAttribute("name") === "create") {
                 evt.preventDefault();
                 evt.stopPropagation();
                 createUser();
-            }
-            // delete user vvv
-            if(evt.target.getAttribute("id") === "btnDeliteId") {
-                // evt.preventDefault();
-                // evt.stopPropagation();
-                deleteUser();
             }
             // fill delete modal
             if(evt.target.getAttribute("data-target") === "#deleteModal") {
@@ -454,6 +446,27 @@
                 console.log("///",userId,"///");
                 fillDeleteModal(userId);
             }
+            // delete user vvv
+            if(evt.target.getAttribute("id") === "btnDeliteId") {
+                // evt.preventDefault();
+                // evt.stopPropagation();
+                deleteUser();
+            }
+            // fill edit modal
+            if(evt.target.getAttribute("data-target") === "#editModal") {
+                let userId = evt.target.getAttribute("id");
+                // evt.preventDefault();
+                // evt.stopPropagation();
+                console.log("edit modal id ",userId,"///");
+                fillEditModal(userId);
+            }
+            // edit user vvv
+            if(evt.target.getAttribute("id") === "btnEditId") {
+                // evt.preventDefault();
+                // evt.stopPropagation();
+                editUser();
+            }
+
         })
 
         function createUser() {
@@ -472,40 +485,23 @@
                     sendDataRole.push(options[i].value)
                 }
             }
-            //------
             sendData["role"] = sendDataRole;
+
             fetch("/rest/",{
-            // let response = fetch("/rest/",{
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json;charset= utf-8'
                 },
                 body:JSON.stringify(sendData)
             }).then(response=>response.json()).then(res => addUserLine(res)).
-            then(addUserClose).then(clearAddingForm);
-            // }).then(response=>response.json()).then(res => console.log(res,"<<<<<")).then(addUserClose).then();
-
-
-            // let responseUser = response.json();
-            // let userJJ = JSON.parse(response);
-            // console.log("--->",userJJ,"<--user");
-            // addUserClose();
-            console.log("createUser");
+            then(addUserClose).then(clearAddingForm).then(console.log("createUser"));
         }
 
         function clearAddingForm() {
-            // let form = document.getElementById("createUserForm");
             let formForClear = document.getElementById("createUserForm").childNodes.item(3).childNodes;
-            formForClear.item(1).childNodes.item(3).value="";
-            formForClear.item(3).childNodes.item(3).value="";
-            formForClear.item(5).childNodes.item(3).value="";
-            formForClear.item(7).childNodes.item(3).value="";
-            formForClear.item(9).childNodes.item(3).value="";
-            // let i = 1;
-            // for (i=1; i<10; i+2) {
-            //     console.log("3>>>",i);
-            //     formForClear.item(i).childNodes.item(3).value="";
-            // }
+            for (let i = 1; i<10; i=i+2) {
+                formForClear.item(i).childNodes.item(3).value="";
+            }
             formForClear.item(11).childNodes.item(3).childNodes.item(1).selected=false
             formForClear.item(11).childNodes.item(3).childNodes.item(3).selected=false;
             console.log("clearAddingForm")
@@ -531,8 +527,8 @@
             doc2.item(7).textContent = changedUser.age;
             doc2.item(9).textContent = changedUser.email;
             let roleUser = changedUser.role;
-            let role1 = doc2.item(11).childNodes.item(3);
-            let role2 = doc2.item(11).childNodes.item(5);
+            let role1 = doc2.item(11).childNodes.item(2);
+            let role2 = doc2.item(11).childNodes.item(3);
             if (roleUser[1].name.includes("ADMIN")) {
                 role2.textContent = "ADMIN";
             } else {
@@ -584,6 +580,128 @@
             console.log("removeUserFromTable");
         }
 
+        function fillEditModal(userId) {
+            let userForForm = getUserFromTable(userId);
+            document.getElementById("idEdit").value = userForForm.id;
+            document.getElementById("firstNameEdit").value = userForForm.firstName;
+            document.getElementById("lastNameEdit").value = userForForm.lastName;
+            document.getElementById("ageEdit").value = userForForm.age;
+            document.getElementById("emailEdit").value = userForForm.email;
+            document.getElementById("passwordEdit").value = "";
+            let roleDoc= document.getElementById("roleEdit").childNodes;
+            roleDoc.item(4).selected = false;
+            roleDoc.item(2).selected = false;
+
+            let formGet2 = document.getElementById(`user${userId}`);
+            let doc2 = formGet2.childNodes;
+            if ((doc2.item(11).textContent).includes("ADMIN")) {
+                roleDoc.item(4).selected = true;
+            }
+            if ((doc2.item(11).textContent).includes("USER")) {
+                roleDoc.item(2).selected = true;
+            }
+            console.log("fillEditModal");
+        }
+
+        function editUser() {
+            let userId = document.getElementById("idEdit").value;
+            let user = {
+                id: document.getElementById("idEdit").value,
+                firstName: document.getElementById("firstNameEdit").value,
+                lastName: document.getElementById("lastNameEdit").value,
+                age: document.getElementById("ageEdit").value,
+                email: document.getElementById("emailEdit").value,
+                password: document.getElementById("passwordEdit").value
+            }
+            let userRole = [];
+            let i=0;
+            let docRole = document.getElementById("roleEdit").childNodes;
+            if (docRole.item(4).selected) {
+                userRole[i]="ROLE_ADMIN";
+                i++;
+            }
+            if (docRole.item(2).selected) {
+                userRole[i]="ROLE_USER";
+            }
+            user["role"] = userRole;
+            sendReceiveEditedUser(user);
+            console.log("editUser");
+        }
+
+        function sendReceiveEditedUser(user) {
+            fetch("/rest/",{
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json;charset= utf-8'
+                },
+                body:JSON.stringify(user)
+            }).then(response=>response.json()).then(res => changeEditedUserField(res)).
+            then(console.log("sendReceiveEditedUser"));
+        }
+
+        function changeEditedUserField(changedUser) {
+            changeUserLine(changedUser.id);
+            let formChange = document.getElementById(`user${changedUser.id}`);
+            let doc2 = formChange.childNodes;
+            console.log("ch1");
+            doc2.item(1).textContent = changedUser.id;
+            doc2.item(3).textContent = changedUser.firstName;
+            doc2.item(5).textContent = changedUser.lastName;
+            doc2.item(7).textContent = changedUser.age;
+            doc2.item(9).textContent = changedUser.email;
+            let roleUser = changedUser.role;
+
+            let hiddenUser = document.getElementById("hiddenLine").childNodes.item(11);
+            console.log("do",doc2.item(11).childNodes.item(1))
+            // doc2.item(11).childNodes.item(1).remove();
+            console.log("posle",doc2.item(11).childNodes.item(1))
+            // doc2.item(11).insertAdjacentHTML("beforeend", `</span>`);
+            // doc2.item(11).insertAdjacentHTML("beforeend", `<span id="roleUser" value="ROLE_USER"></span>`);
+            // doc2.item(11).insertAdjacentHTML("beforeend", `<span>`);
+            // doc2.item(11).insertAdjacentHTML("beforeend", `</span>`);
+            // doc2.item(11).insertAdjacentHTML("beforeend", `<span id="roleAdmin" value="ROLE_ADMIN"></span>`);
+            // doc2.item(11).insertAdjacentHTML("beforeend", `<span>`);
+            console.log("posle2",doc2.item(11).childNodes.item(1))
+            let role1 = doc2.item(11).childNodes.item(2);
+            let role2 = doc2.item(11).childNodes.item(3);
+            console.log("ch1,5",role1,"r1<<>>r2",role2,"node with role",doc2.item(11).childNodes.item(2),">>><<<",hiddenUser);
+
+            role1.textContent = "";
+            role2.textContent = "";
+            console.log("ch2");
+            if (roleUser[1].name.includes("ADMIN")) {
+                role2.textContent = "ADMIN";
+            } else {
+                role2.textContent = "USER";
+            }
+            console.log("ch3");
+            if (roleUser[0] != null) {
+                if (roleUser[0].name.includes("ADMIN")) {
+                    role1.textContent = "ADMIN";
+                } else {
+                    role1.textContent = "USER";
+                }
+            }
+            // // doc2.item(13).childNodes.item(1).id=`${changedUser.id}`;
+            // // doc2.item(15).childNodes.item(1).id=`${changedUser.id}`
+            let formBtn = document.getElementById(`user${changedUser.id}`).childNodes;
+            formBtn.item(13).childNodes.item(1).id=`${changedUser.id}`;
+            formBtn.item(15).childNodes.item(1).id=`${changedUser.id}`
+            console.log("changeUserField");
+        }
+
+        function changeUserLine(userId) {
+            let formLine = document.getElementById(`user${userId}`);
+            let hiddenUser = document.getElementById("hiddenLine");
+            let cloneLine = hiddenUser.cloneNode(true);
+            formLine.before(cloneLine);
+            formLine.remove();
+            let lineUser = document.getElementById("hiddenLine");
+            lineUser.hidden = false;
+            lineUser.id = `user${userId}`;
+            console.log("changeUserLine");
+        }
+        
         function getUserFromTable(userId) {
             let formGet2 = document.getElementById(`user${userId}`);
             let doc2 = formGet2.childNodes;

@@ -1,5 +1,6 @@
 package com.example.crudrest.controller;
 
+import com.example.crudrest.model.Role;
 import com.example.crudrest.model.User;
 import com.example.crudrest.service.RoleService;
 import com.example.crudrest.service.UserService;
@@ -60,13 +61,27 @@ public class RestAdminController {
 
 
     @PutMapping("/")
-    private void updateUser(User user, String[] role) {
+    private ResponseEntity<User> updateUser(@RequestBody User user) {
+        String[] role = getRoleFromResivedUser(user);
+        if (user.getPassword().equals("")) {
+            user.setPassword((userService.getUserById(user.getId())).getPassword());
+        }
         userService.editUser(user, role);
+        User responseUser = userService.getUserById(user.getId());
+        return ResponseEntity.ok(responseUser);
 //        return "redirect:/admin";
     }
 
     @PostMapping({"/"})
     private ResponseEntity<User> createNewUser(@RequestBody User user) {
+        String[] role = getRoleFromResivedUser(user);
+        userService.add(user, role);
+        User responseUser = userService.getUserByLogin(user.getEmail());
+        return ResponseEntity.ok(responseUser);
+//        return "redirect:/admin";
+    }
+
+    private String[] getRoleFromResivedUser(User user) {
         String[] role = new String[2];
         if (user.getRole().toString().contains("ROLE_ADMIN")) {
             role[0] = "ROLE_ADMIN";
@@ -76,12 +91,8 @@ public class RestAdminController {
         } else {
             role[0] = "ROLE_USER";
         }
-        userService.add(user, role);
-        User responseUser = userService.getUserByLogin(user.getEmail());
-        return ResponseEntity.ok(responseUser);
-//        return "redirect:/admin";
+        return role;
     }
-
 //    @GetMapping("/error")
 //    private String error() {
 //        return "error";
