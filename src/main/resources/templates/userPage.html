@@ -50,13 +50,13 @@
                                 <th>Role</th>
                             </tr>
                             <tr>
-                                <td th:utext="${userList.getId()}"></td>
-                                <td th:utext="${userList.getFirstName()}"></td>
-                                <td th:utext="${userList.getLastName()}"></td>
-                                <td th:utext="${userList.getAge()}"></td>
-                                <td th:utext="${userList.getEmail()}"></td>
+                                <td th:utext="${user.getId()}"></td>
+                                <td th:utext="${user.getFirstName()}"></td>
+                                <td th:utext="${user.getLastName()}"></td>
+                                <td th:utext="${user.getAge()}"></td>
+                                <td th:utext="${user.getEmail()}"></td>
                                 <td class="text-nowrap">
-                                    <span th:each="role : ${userList.getRole()}">
+                                    <span th:each="role : ${user.getRole()}">
                                         <span th:if="${role.toString() == 'ROLE_USER'}">USER</span>
                                         <span th:if="${role.toString() == 'ROLE_ADMIN'}">ADMIN</span>
                                     </span>

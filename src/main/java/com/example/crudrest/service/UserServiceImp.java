@@ -4,6 +4,7 @@ import com.example.crudrest.dao.UserDao;
 import com.example.crudrest.model.Role;
 import com.example.crudrest.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,24 +43,6 @@ public class UserServiceImp implements UserService {
         return true;
     }
 
-//    @Transactional
-//    @Override
-//    public boolean add2(User user) {
-//        user.setRole(user.getRole());
-//        Set<Role> roleSet = new HashSet<>();
-//        roleSet = user.getRole();
-//        User user1 = new User();
-//        user1.setFirstName(user.getFirstName());
-//        user1.setLastName(user.getLastName());
-//        user1.setAge(user.getAge());
-//        user1.setEmail(user.getEmail());
-//
-//        user1.setRole(roleSet);
-//        user1.setPassword(passwordEncoder.encode(user.getPassword()));
-//        userDao.add(user1);
-//        userDao.add(user);
-//        return true;
-//    }
 
     @Transactional
     @Override
@@ -78,7 +61,9 @@ public class UserServiceImp implements UserService {
     @Transactional
     @Override
     public boolean deleteUser(Long id) {
-        if (userDao.getUserById(id).isEnabled()) {
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if (userDao.getUserById(id).isEnabled() && !(userDao.getUserById(id).getUsername()).equals(userName)) {
             userDao.deleteUser(id);
             return true;
         }

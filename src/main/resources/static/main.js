@@ -8,29 +8,21 @@ document.body.addEventListener("click", function (evt) {
     // fill delete modal
     if(evt.target.getAttribute("data-target") === "#deleteModal") {
         let userId = evt.target.getAttribute("id");
-        // evt.preventDefault();
-        // evt.stopPropagation();
         console.log("///",userId,"///");
         fillDeleteModal(userId);
     }
     // delete user vvv
     if(evt.target.getAttribute("id") === "btnDeliteId") {
-        // evt.preventDefault();
-        // evt.stopPropagation();
         deleteUser();
     }
     // fill edit modal
     if(evt.target.getAttribute("data-target") === "#editModal") {
         let userId = evt.target.getAttribute("id");
-        // evt.preventDefault();
-        // evt.stopPropagation();
         console.log("edit modal id ",userId,"///");
         fillEditModal(userId);
     }
     // edit user vvv
     if(evt.target.getAttribute("id") === "btnEditId") {
-        // evt.preventDefault();
-        // evt.stopPropagation();
         editUser();
     }
 
@@ -43,7 +35,6 @@ function createUser() {
     for(let i=0; i<inputs.length; i++) {
         sendData[inputs[i].id] = inputs[i].value;
     }
-
     let select = form.querySelector("select");
     let options = select.querySelectorAll("option");
     let sendDataRole = [];
@@ -158,7 +149,6 @@ function fillEditModal(userId) {
     let roleDoc= document.getElementById("roleEdit").childNodes;
     roleDoc.item(4).selected = false;
     roleDoc.item(2).selected = false;
-
     let formGet2 = document.getElementById(`user${userId}`);
     let doc2 = formGet2.childNodes;
     if ((doc2.item(11).textContent).includes("ADMIN")) {
