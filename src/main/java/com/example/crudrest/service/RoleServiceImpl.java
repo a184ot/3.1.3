@@ -8,12 +8,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class RoleServiceImp implements RoleService {
+public class RoleServiceImpl implements RoleService {
 
-    RoleDao roleDao;
+    private RoleDao roleDao;
 
     @Autowired
-    public RoleServiceImp(RoleDao roleDao) {
+    public RoleServiceImpl(RoleDao roleDao) {
         this.roleDao = roleDao;
     }
 

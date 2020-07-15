@@ -11,19 +11,19 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
-public class UserDaoImp implements UserDao {
+public class UserDaoImpl implements UserDao {
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Autowired
     PasswordEncoder passwordEncoder;
 
     private RoleService roleService;
 
     @Autowired
-    public UserDaoImp(RoleService roleService) {
+    public UserDaoImpl(RoleService roleService ,PasswordEncoder passwordEncoder) {
         this.roleService = roleService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override

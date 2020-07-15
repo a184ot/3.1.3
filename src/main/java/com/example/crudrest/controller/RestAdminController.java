@@ -1,6 +1,5 @@
 package com.example.crudrest.controller;
 
-import com.example.crudrest.model.Role;
 import com.example.crudrest.model.User;
 import com.example.crudrest.service.RoleService;
 import com.example.crudrest.service.UserService;
@@ -19,24 +18,14 @@ public class RestAdminController {
 
     private UserService userService;
 
+    private RoleService roleService;
+
     @Autowired
-    public RestAdminController(UserService userService) {
+    public RestAdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
-    @Autowired
-    RoleService roleService;
-
-//    @RequestMapping("/admin")
-//    @ResponseBody
-//    private String userList(Model model) {
-//        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-//        User user = userService.getUserByLogin(userName);
-//        model.addAttribute("adminList", user);
-//        model.addAttribute("userList", userService.listAllUsers());
-//        model.addAttribute("rolesuser", roleService.getRoles());
-//        return "all-users";
-//    }
 
     @GetMapping("/")
     private ResponseEntity<List<User>> listUser() {
@@ -55,8 +44,6 @@ public class RestAdminController {
         } else {
             return new ResponseEntity<>(null, HttpStatus.SERVICE_UNAVAILABLE);
         }
-//        return ResponseEntity.status(200);
-//        return "redirect:/admin";
     }
 
 
@@ -69,7 +56,6 @@ public class RestAdminController {
         userService.editUser(user, role);
         User responseUser = userService.getUserById(user.getId());
         return ResponseEntity.ok(responseUser);
-//        return "redirect:/admin";
     }
 
     @PostMapping({"/"})
@@ -78,7 +64,6 @@ public class RestAdminController {
         userService.add(user, role);
         User responseUser = userService.getUserByLogin(user.getEmail());
         return ResponseEntity.ok(responseUser);
-//        return "redirect:/admin";
     }
 
     private String[] getRoleFromResivedUser(User user) {
@@ -93,8 +78,4 @@ public class RestAdminController {
         }
         return role;
     }
-//    @GetMapping("/error")
-//    private String error() {
-//        return "error";
-//    }
 }

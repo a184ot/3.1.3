@@ -14,46 +14,33 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-public class UserServiceImp implements UserService {
+public class UserServiceImpl implements UserService {
 
     private UserDao userDao;
 
-    @Autowired
-    public UserServiceImp(UserDao userDao) {
-        this.userDao = userDao;
-    }
-
-    @Autowired
     private RoleService roleService;
 
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
-    PasswordEncoder passwordEncoder;
+    public UserServiceImpl(UserDao userDao, RoleService roleService, PasswordEncoder passwordEncoder) {
+        this.userDao = userDao;
+        this.roleService = roleService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Transactional
     @Override
-    public boolean add(User user, String[] roles) {
-        Set<Role> roleSet = new HashSet<>();
-        for (String role : roles) {
-            Role roleDB = roleService.getRoleByName(role);
-            roleSet.add(roleDB);
-        }
-        user.setRole(roleSet);
+    public void add(User user, String[] roles) {
+        user.setRole(getRoleSetFromId(roles));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.add(user);
-        return true;
     }
-
 
     @Transactional
     @Override
     public void editUser(User user, String[] roles) {
-        Set<Role> roleSet = new HashSet<>();
-        Role roleDB;
-        for (String role : roles) {
-            roleDB = roleService.getRoleByName(role);
-            roleSet.add(roleDB);
-        }
-        user.setRole(roleSet);
+        user.setRole(getRoleSetFromId(roles));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.editUser(user);
     }
@@ -62,7 +49,6 @@ public class UserServiceImp implements UserService {
     @Override
     public boolean deleteUser(Long id) {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-
         if (userDao.getUserById(id).isEnabled() && !(userDao.getUserById(id).getUsername()).equals(userName)) {
             userDao.deleteUser(id);
             return true;
@@ -83,5 +69,14 @@ public class UserServiceImp implements UserService {
     @Override
     public User getUserById(Long id) {
         return userDao.getUserById(id);
+    }
+
+    public Set<Role> getRoleSetFromId(String[] roles) {
+        Set<Role> roleSet = new HashSet<>();
+        for (String role : roles) {
+            Role roleDB = roleService.getRoleByName(role);
+            roleSet.add(roleDB);
+        }
+        return roleSet;
     }
 }

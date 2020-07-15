@@ -17,8 +17,7 @@
         <span class="navbar-brand mb-0 h1"><b th:utext="${ adminList.getEmail()}"></b>
             <span class="text-white">User with roles:
                 <span th:each="role : ${adminList.getRole()}">
-                    <span th:if="${role.toString() == 'ROLE_USER'}">USER</span>
-                    <span th:if="${role.toString() == 'ROLE_ADMIN'}">ADMIN</span>
+                    <span th:value="${role.getId()}" th:text="${role.getName().substring(5)}"></span>
                 </span>
             </span>
         </span>
@@ -76,9 +75,8 @@
                                     <td id="age" th:utext="${user.age}"></td>
                                     <td id="email" th:utext="${user.email}"></td>
                                     <td class="text-nowrap">
-                                    <span th:each="role : ${user.role}">
-                                        <span id="roleUser" th:if="${role.toString() == 'ROLE_USER'}">USER</span>
-                                        <span id="roleAdmin" th:if="${role.toString() == 'ROLE_ADMIN'}">ADMIN</span>
+                                    <span th:each="role : ${user.getRole()}">
+                                        <span th:value="${role.getId()}" th:text="${role.getName().substring(5)}"></span>
                                     </span>
                                     </td>
                                     <td>
@@ -102,8 +100,9 @@
                                     <td value="age"></td>
                                     <td value="email"></td>
                                     <td class="text-nowrap">
-                                        <span id="roleUser" value="ROLE_USER"></span>
-                                        <span id="roleAdmin" value="ROLE_ADMIN"></span>
+                                        <span th:each="role : ${rolesuser}">
+                                        <span th:value="${role.getId()}"></span>
+                                        </span>
                                     </td>
                                     <td>
                                         <button type="button" class="btn btn-info" data-toggle="modal"
@@ -259,13 +258,12 @@
                                     <label class="my-0"><b>Role</b></label>
                                     <div class="form-group">
                                         <select disabled class="form-control form-control-sm"
-                                                size="2" name="role" value="role">
-                                            <!--                                                                        th:value="*{role}">-->
+                                                size="2" th:attr="size=${rolesuser.size()}" name="role" th:value="*{role}">
                                             <th:block>
-                                                <option value="USER_ROLE">USER</option>
-                                                <option value="ADMIN_ROLE">ADMIN</option>
+                                                <option th:each="role : ${rolesuser}"
+                                                        th:value="${role.getName()}"
+                                                        th:text="${role.getName().substring(5)}"></option>
                                             </th:block>
-                                            <!--                                                                    </th:block>-->
                                         </select>
                                     </div>
                                 </div>
