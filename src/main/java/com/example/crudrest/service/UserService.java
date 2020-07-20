@@ -5,9 +5,9 @@ import com.example.crudrest.model.User;
 import java.util.List;
 
 public interface UserService {
-    void add(User user, String[] roles);
+    void add(User user);
     boolean deleteUser(Long id);
-    void editUser(User user, String[] roles);
+    void editUser(User user);
     List<User> listAllUsers();
     User getUserByLogin(String login);
     User getUserById(Long id);

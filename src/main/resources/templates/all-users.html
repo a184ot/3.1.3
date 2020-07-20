@@ -14,9 +14,9 @@
 <body>
 
 <nav class="navbar navbar-dark bg-dark">
-        <span class="navbar-brand mb-0 h1"><b th:utext="${ adminList.getEmail()}"></b>
+        <span class="navbar-brand mb-0 h1"><b th:utext="${ userMy.getEmail()}"></b>
             <span class="text-white">User with roles:
-                <span th:each="role : ${adminList.getRole()}">
+                <span th:each="role : ${userMy.getRole()}">
                     <span th:value="${role.getId()}" th:text="${role.getName().substring(5)}"></span>
                 </span>
             </span>
@@ -80,25 +80,25 @@
                                     </span>
                                     </td>
                                     <td>
-                                        <button type="button" class="btn btn-info" data-toggle="modal"
+                                        <button type="button" class="btn btn-info" data-toggle="modal" name="fillEdit"
                                                 data-target="#editModal" id="" th:attrappend="id=${user.id}">
                                             Edit
                                         </button>
                                     </td>
                                     <td>
                                         <button type="button" class="btn btn-danger" data-toggle="modal"
-                                                data-target="#deleteModal" id="" th:attrappend="id=${user.id}">
+                                                data-target="#deleteModal" name="fillDelete" id="" th:attrappend="id=${user.id}">
                                             Delete
                                         </button>
                                     </td>
                                 </tr>
-                                <!--hidden line                            -->
+
                                 <tr hidden="true" id="hiddenLine">
-                                    <td value="id"></td>
-                                    <td value="firstName"></td>
-                                    <td value="lastName"></td>
-                                    <td value="age"></td>
-                                    <td value="email"></td>
+                                    <td id="id"></td>
+                                    <td id="firstName"></td>
+                                    <td id="lastName"></td>
+                                    <td id="age"></td>
+                                    <td id="email"></td>
                                     <td class="text-nowrap">
                                         <span th:each="role : ${rolesuser}">
                                         <span th:value="${role.getId()}"></span>
@@ -106,18 +106,18 @@
                                     </td>
                                     <td>
                                         <button type="button" class="btn btn-info" data-toggle="modal"
-                                                data-target="#editModal" id="">
+                                                name="fillEdit" data-target="#editModal" id="">
                                             Edit
                                         </button>
                                     </td>
                                     <td>
                                         <button type="button" class="btn btn-danger" data-toggle="modal"
-                                                data-target="#deleteModal" id="">
+                                                name="fillDelete" data-target="#deleteModal" id="">
                                             Delete
                                         </button>
                                     </td>
                                 </tr>
-                                <!--hidden line                            -->
+
                             </div>
                         </table>
                     </form>
@@ -180,10 +180,11 @@
                                     <label class="my-0"><b>Role</b></label>
                                     <div class="form-group">
                                         <select multiple class="form-control form-control-sm" id="roleEdit"
-                                                size="2" name="role" value="role"><!--th:value="*{role}"-->
+                                                size="2" th:attr="size=${rolesuser.size()}" name="role" th:value="*{role}">
                                             <th:block>
-                                                <option value="ROLE_USER">USER</option>
-                                                <option value="ROLE_ADMIN">ADMIN</option>
+                                                <option th:each="role : ${rolesuser}"
+                                                        th:value="${role.getId()}"
+                                                        th:text="${role.getName()}"></option>
                                             </th:block>
                                         </select>
                                     </div>
@@ -222,7 +223,6 @@
                                         <input type="text" class="form-control form-control-sm"
                                                id="idDelete" value="id" name="id"
                                                placeholder="idDelete" readonly>
-                                        <!--                                                                       th:value="${user.getId()}" -->
                                     </div>
                                     <label class="my-0" for="firstNameDelete"><b>First
                                         name</b></label>
@@ -231,7 +231,6 @@
                                                id="firstNameDelete" value="firstName"
                                                name="firstName" placeholder="First name"
                                                readonly>
-                                        <!--                                                                       th:value="${user.getFirstName()}"-->
                                     </div>
                                     <label class="my-0" for="lastNameDelete"><b>Last
                                         name</b></label>
@@ -239,21 +238,18 @@
                                         <input type="text" class="form-control form-control-sm"
                                                id="lastNameDelete" name="lastName" value="lastName"
                                                placeholder="Last name" readonly>
-                                        <!--                                                                       th:value="${user.getLastName()}" -->
                                     </div>
                                     <label class="my-0" for="ageDelete"><b>Age</b></label>
                                     <div class="form-group">
                                         <input type="number" class="form-control form-control-sm"
                                                id="ageDelete" value="age" name="age" min="1"
                                                max="200" placeholder="Age" readonly>
-                                        <!--                                                                       th:value="${user.getAge()}" -->
                                     </div>
                                     <label class="my-0" for="emailDelete"><b>Email</b></label>
                                     <div class="form-group">
                                         <input type="email" class="form-control form-control-sm"
                                                id="emailDelete" value="email"
                                                name="email" placeholder="e-mail" readonly>
-                                        <!--                                                                       th:value="${user.getEmail()}"-->
                                     </div>
                                     <label class="my-0"><b>Role</b></label>
                                     <div class="form-group">
@@ -300,15 +296,14 @@
                                     <th>Role</th>
                                 </tr>
                                 <tr>
-                                    <td th:utext="${adminList.getId()}"></td>
-                                    <td th:utext="${adminList.getFirstName()}"></td>
-                                    <td th:utext="${adminList.getLastName()}"></td>
-                                    <td th:utext="${adminList.getAge()}"></td>
-                                    <td th:utext="${adminList.getEmail()}"></td>
+                                    <td th:utext="${userMy.getId()}"></td>
+                                    <td th:utext="${userMy.getFirstName()}"></td>
+                                    <td th:utext="${userMy.getLastName()}"></td>
+                                    <td th:utext="${userMy.getAge()}"></td>
+                                    <td th:utext="${userMy.getEmail()}"></td>
                                     <td class="text-nowrap">
-                <span th:each="role : ${adminList.getRole()}">
-                    <span th:if="${role.toString() == 'ROLE_USER'}">USER</span>
-                    <span th:if="${role.toString() == 'ROLE_ADMIN'}">ADMIN</span>
+                                        <span th:each="role : ${userMy.getRole()}">
+                    <span th:value="${role.getId()}" th:text="${role.getName().substring(5)}"></span>
                 </span>
                                     </td>
                                 </tr>
@@ -376,14 +371,16 @@
                                                 <label class="font-weight-bold my-0">Role</label>
 
                                                 <select multiple class="form-control form-control-sm" size="2"
-                                                        name="role">
+                                                        th:attr="size=${rolesuser.size()}"
+                                                        name="role" id="roleAdd">
                                                     <option th:each="role : ${rolesuser}"
-                                                            th:value="${role}"
-                                                            th:text="${role}"></option>
+                                                            th:id="${role.getId()}"
+                                                            th:value="${role.getId()}"
+                                                            th:text="${role.getName()}"></option>
                                                 </select>
                                             </div>
                                             <div align="center" class="form-group">
-                                                <button name="create"
+                                                <button name="create" id="createUserBtn"
                                                         class="btn btn-success">
                                                     Add new user
                                                 </button>
@@ -410,9 +407,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"-->
+<!--        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"-->
+<!--        crossorigin="anonymous"></script>-->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-<script src="../main.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bPopup/0.11.0/jquery.bpopup.min.js"></script>
+<script src="../main2.js"></script>
 </body>
 </html>

@@ -31,16 +31,14 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void add(User user, String[] roles) {
-        user.setRole(getRoleSetFromId(roles));
+    public void add(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.add(user);
     }
 
     @Transactional
     @Override
-    public void editUser(User user, String[] roles) {
-        user.setRole(getRoleSetFromId(roles));
+    public void editUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.editUser(user);
     }

@@ -8,7 +8,6 @@ document.body.addEventListener("click", function (evt) {
     // fill delete modal
     if(evt.target.getAttribute("data-target") === "#deleteModal") {
         let userId = evt.target.getAttribute("id");
-        console.log("///",userId,"///");
         fillDeleteModal(userId);
     }
     // delete user vvv
@@ -18,14 +17,12 @@ document.body.addEventListener("click", function (evt) {
     // fill edit modal
     if(evt.target.getAttribute("data-target") === "#editModal") {
         let userId = evt.target.getAttribute("id");
-        console.log("edit modal id ",userId,"///");
         fillEditModal(userId);
     }
     // edit user vvv
     if(evt.target.getAttribute("id") === "btnEditId") {
         editUser();
     }
-
 })
 
 function createUser() {
@@ -62,7 +59,6 @@ function clearAddingForm() {
     }
     formForClear.item(11).childNodes.item(3).childNodes.item(1).selected=false
     formForClear.item(11).childNodes.item(3).childNodes.item(3).selected=false;
-    console.log("clearAddingForm")
 }
 
 function addUserLine(res) {
@@ -73,7 +69,6 @@ function addUserLine(res) {
     lineUser.hidden = false;
     lineUser.id = `user${res.id}`;
     changeUserField(res)
-    console.log("addUserLine");
 }
 
 function changeUserField(changedUser) {
@@ -101,7 +96,6 @@ function changeUserField(changedUser) {
     }
     doc2.item(13).childNodes.item(1).id=`${changedUser.id}`;
     doc2.item(15).childNodes.item(1).id=`${changedUser.id}`
-    console.log("changeUserField");
 }
 
 function addUserClose() {
@@ -113,13 +107,11 @@ function addUserClose() {
     document.getElementById("v-pills-create").classList.remove("show", "active");
     tab.classList.remove("active");
     usersTab.classList.add("active");
-    console.log("addUserClose");
 }
 
 function deleteUser() {
     let userId = document.getElementById("idDelete").value;
     deleteUserFromDB(userId);
-    console.log("deleteUser");
 }
 
 function fillDeleteModal(userId) {
@@ -129,13 +121,11 @@ function fillDeleteModal(userId) {
     document.getElementById("lastNameDelete").value = userForForm.lastName;
     document.getElementById("ageDelete").value = userForForm.age;
     document.getElementById("emailDelete").value = userForForm.email;
-    console.log("fillDeleteModal");
 }
 
 function removeUserFromTable(userId) {
     let form = document.getElementById(`user${userId}`);
     form.parentNode.removeChild(form);
-    console.log("removeUserFromTable");
 }
 
 function fillEditModal(userId) {
@@ -157,7 +147,6 @@ function fillEditModal(userId) {
     if ((doc2.item(11).textContent).includes("USER")) {
         roleDoc.item(2).selected = true;
     }
-    console.log("fillEditModal");
 }
 
 function editUser() {
@@ -182,7 +171,6 @@ function editUser() {
     }
     user["role"] = userRole;
     sendReceiveEditedUser(user);
-    console.log("editUser");
 }
 
 function sendReceiveEditedUser(user) {
@@ -225,7 +213,6 @@ function changeEditedUserField(changedUser) {
     let formBtn = document.getElementById(`user${changedUser.id}`).childNodes;
     formBtn.item(13).childNodes.item(1).id=`${changedUser.id}`;
     formBtn.item(15).childNodes.item(1).id=`${changedUser.id}`
-    console.log("changeUserField");
 }
 
 function changeUserLine(userId) {
@@ -237,7 +224,6 @@ function changeUserLine(userId) {
     let lineUser = document.getElementById("hiddenLine");
     lineUser.hidden = false;
     lineUser.id = `user${userId}`;
-    console.log("changeUserLine");
 }
 
 function getUserFromTable(userId) {
@@ -256,12 +242,10 @@ function getUserFromTable(userId) {
     if ((doc2.item(11).textContent).includes("USER")) {
         docRole = docRole.concat("USER");
     }
-    console.log("getUserFromTable");
     return user;
 }
 
 function deleteUserFromDB(userId) {
-    console.log(userId ,"/=/=/","///","user id");
     fetch(`/rest/${userId}`,{
         method: "DELETE",
         headers: {
@@ -271,5 +255,4 @@ function deleteUserFromDB(userId) {
     function resStat(res) {
         if (res.status === 200) removeUserFromTable(userId);
     }
-    console.log("deleteUserFromDB");
 }

@@ -1,5 +1,6 @@
 package com.example.crudrest.controller;
 
+import com.example.crudrest.model.Role;
 import com.example.crudrest.model.User;
 import com.example.crudrest.service.RoleService;
 import com.example.crudrest.service.UserService;
@@ -27,9 +28,10 @@ public class AdminController {
     private String userList(Model model) {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUserByLogin(userName);
-        model.addAttribute("adminList", user);
+        model.addAttribute("userMy", user);
         model.addAttribute("userList", userService.listAllUsers());
         model.addAttribute("rolesuser", roleService.getRoles());
+        
         return "all-users";
     }
 
